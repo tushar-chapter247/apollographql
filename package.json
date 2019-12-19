@@ -3,7 +3,7 @@
 	"version": "0.0.0",
 	"private": true,
 	"scripts": {
-		"start": "node ./bin/www",
+		"start": "PORT=3005 ./bin/www",
 		"lint:fix": "yarn run prettier:fix",
 		"prettier:cli": "prettier \"**/*.ts\" \"**/*.tsx\" \"**/*.js\"",
 		"prettier:check": "yarn run prettier:cli -- -l",
@@ -11,6 +11,7 @@
 	},
 	"dependencies": {
 		"cookie-parser": "~1.4.4",
+		"cors": "^2.8.5",
 		"debug": "~2.6.9",
 		"ejs": "~2.6.1",
 		"express": "~4.16.1",
