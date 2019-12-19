@@ -1,8 +1,16 @@
 const createError = require('http-errors');
 const express = require('express');
+const chalk = require('chalk');
+const basicPino = require('pino');
+const basicPinoLogger = basicPino({
+	prettyPrint: { colorize: chalk.supportsColor },
+});
+const expressPino = require('express-pino-logger')({
+	logger: basicPinoLogger,
+});
+
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const logger = require('morgan');
 const cors = require('cors');
 
 const indexRouter = require('./routes/index');
@@ -14,7 +22,7 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(logger('dev'));
+app.use(expressPino);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
