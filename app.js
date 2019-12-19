@@ -15,6 +15,7 @@ const cors = require('cors');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const models = require('./models');
 
 const { ApolloServer } = require('apollo-server-express');
 
@@ -73,6 +74,16 @@ app.use(function(err, req, res, next) {
 	res.status(err.status || 500);
 	res.render('error');
 });
+
+// sync database
+models.sequelize
+	.sync()
+	.then(function() {
+		console.log('Database looks fine!');
+	})
+	.catch(function(err) {
+		console.log('Something went wrong with database: ', err);
+	});
 
 const apolloServer = new ApolloServer({
 	typeDefs,
