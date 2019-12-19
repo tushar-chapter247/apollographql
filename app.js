@@ -16,7 +16,33 @@ const cors = require('cors');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
+const { ApolloServer } = require('apollo-server-express');
+
+// Some fake data
+const books = [
+	{
+		title: "Harry Potter and the Sorcerer's stone",
+		author: 'J.K. Rowling',
+	},
+	{
+		title: 'Jurassic Park',
+		author: 'Michael Crichton',
+	},
+];
+
+// The GraphQL schema in string form
+const typeDefs = `
+  type Query { books: [Book] }
+  type Book { title: String, author: String }
+`;
+
+// The resolvers
+const resolvers = {
+	Query: { books: () => books },
+};
+
 const app = express();
+const gpath = '/graphql';
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -47,5 +73,16 @@ app.use(function(err, req, res, next) {
 	res.status(err.status || 500);
 	res.render('error');
 });
+
+const apolloServer = new ApolloServer({
+	typeDefs,
+	resolvers,
+});
+
+apolloServer.applyMiddleware({ app, gpath });
+
+console.log(
+	`🚀 Server ready at http://localhost:${process.env.PORT}${apolloServer.graphqlPath}`
+);
 
 module.exports = app;
